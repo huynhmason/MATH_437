@@ -42,11 +42,25 @@ for (i in 1:100)
 decision <- rep("Do not reject H0", 100)
 decision[p.values <= 0.05] <- "Reject H0"
 ```
+
 ```{r}
 table (decision ,
 c( rep ("H0 is False ", 50), rep ("H0 is True ", 50))
 )
 ```
+Power = 1 - 40/50 = 0.20
+
+Note: 
+Given $H_0$ false,
+Power + $\beta$ = 1
+
+Power = Reject H0 & H0 false
+Power = P(reject H0 | H0 is false)
+= #(reject H0 & H0 is False)/# H0 false
+
+Beta = Do not reject H0 & H0 false
+Power = 1 - Beta
+
 ```{r}
 x <- matrix ( rnorm (10 * 100), 10, 100)
 x[, 1:50] <- x[, 1:50] + 1
@@ -60,11 +74,8 @@ c( rep ("H0 is False ", 50), rep ("H0 is True ", 50))
 ```
 
 Using the output of Lab 13.6.1, estimate the power of this test to detect each of the two alternative hypotheses $\mu = 0.5$ and $\mu = 1$.
-Power = P(reject H0 | H0 is false)
-= #(reject H0 & H0 is False)/# H0 false
-= 1 - 40/50 = 0.20
 
-```{r}
+```{r Alternative hypothesis $\mu = 0.5$}
 x <- matrix ( rnorm (10 * 100), 10, 100)
 x[, 1:50] <- x[, 1:50] + 1
 for (i in 1:100)
@@ -75,9 +86,9 @@ table (decision ,
 c( rep ("H0 is False ", 50), rep ("H0 is True ", 50))
 )
 ```
-Power = 1 - 14/50 = 0.72
+Power = 17/50 = 0.34
 
-```{r}
+```{r Alternative hypothesis $\mu = 1$}
 x <- matrix ( rnorm (10 * 100), 10, 100)
 x[, 1:50] <- x[, 1:50] + 1
 for (i in 1:100)
@@ -88,19 +99,22 @@ table (decision ,
 c( rep ("H0 is False ", 50), rep ("H0 is True ", 50))
 )
 ```
-Power = 1 - 3/50 = 0.94
+Power = 2/50 = 0.04
 
 ## Part b (Explanation: 1 pt)
 
 What does the `p.adjust` function do exactly when `method = bonferroni`? What about when `method = holm`? Why does it make more sense for R to adjust the p-values rather than the significance level when controlling the FWER?
 
-When `method = bonferroni`, p-values are multiplied by the number of comparisons. 
+When `method = bonferroni`
+When `method = holm` 
+It makes more sense for R to adjust the p-values rather than the significance level when controlling the FWER because 
 
 ## Part c (Explanation: 1 pt)
 
 Consider the second-to-last chunk in ISLR Lab 13.6.2 (the one using `TukeyHSD`). Is it appropriate to do a one-way ANOVA with this data? Explain why or why not. (You may want to produce some graphs and/or numerical summaries to support your answer.)
 
 Hint: What are the assumptions for the ANOVA Test? Are they clearly violated?
+
 
 # Problem 2: False Discovery Rate
 
