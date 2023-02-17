@@ -41,7 +41,7 @@ Quantitative prediction questions, taking on numerical values, are generally ans
 
 6. In prediction, we typically aim to minimize a *loss function* that more-or-less represents the total error in our predictions. Give one example each for regression and classification problems of a measure of model (in)accuracy.
 
-#####
+*Mean squared error* is an example of a loss function for regression problems. *Training error rate* is an example of a loss function for classification problems. 
 
 7. Why do we only fit the model on a *training set*? What do we do with the rest of the data?
 
@@ -57,7 +57,10 @@ As a model becomes more complex, the *bias* of the model will decrease and the *
 
 10. Briefly explain how a *Bayes classifier* works.
 
-A *Bayes classifier* is the conditional probability that is used to produce the lowest possible error rate called the *Bayes error rule.* The conditional probability for *Bayes classifier* is P(Y = j | X = x0), where j = 1, 2 depending on which response variable it is referring to and x0 is the predictor value.....
+A *Bayes classifier* is the conditional probability that is used to produce the lowest possible error rate called the *Bayes error rule.* The conditional probability for *Bayes classifier* is P(Y = j | X = x0), where j = 1, 2 depending on which response variable it is referring to and x0 is the predictor value..... 
+
+(I think this answers the question, but I didn't want to delete your answer)
+A *Bayes classifier* assigns each observation to the most likely class, given its predictor values. The Bayes classifier will always choose the class for which the conditional probability is largest. 
 
 # Conceptual Problems
 
