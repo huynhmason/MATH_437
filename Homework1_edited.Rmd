@@ -151,12 +151,18 @@ A <- coll[ , 1:10]
 pairs(A)
 
 # c.iii
-coll$Outstate <- as.factor(coll$Outstate)
+coll$Outstate
 coll$Private <- as.factor(coll$Private)
-plot(coll$Outstate, coll$Private, col = "red", varwidth = TRUE, horizontal = TRUE, xlab = "Outstate", ylab = "Private")
+boxplot(coll$Private, coll$Outstate)
+#idk if the boxplot is correct
 # c.iv
-
-
+Elite <- rep ( " No " , nrow ( coll ) )
+Elite [ coll $ Top10perc > 50] <- " Yes "
+Elite <- as.factor ( Elite )
+coll <- data.frame ( coll , Elite )
+summary(Elite)
+boxplot(coll$Elite,coll$Outstate)
+#I still don't think the boxplot is correct
 # c.v
 
 
