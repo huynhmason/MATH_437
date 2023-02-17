@@ -41,7 +41,7 @@ Quantitative prediction questions, taking on numerical values, are generally ans
 
 6. In prediction, we typically aim to minimize a *loss function* that more-or-less represents the total error in our predictions. Give one example each for regression and classification problems of a measure of model (in)accuracy.
 
-#####
+*Mean squared error* is an example of a loss function for regression problems. *Training error rate* is an example of a loss function for classification problems. 
 
 7. Why do we only fit the model on a *training set*? What do we do with the rest of the data?
 
@@ -57,7 +57,10 @@ As a model becomes more complex, the *bias* of the model will decrease and the *
 
 10. Briefly explain how a *Bayes classifier* works.
 
-A *Bayes classifier* is the conditional probability that is used to produce the lowest possible error rate called the *Bayes error rule.* The conditional probability for *Bayes classifier* is P(Y = j | X = x0), where j = 1, 2 depending on which response variable it is referring to and x0 is the predictor value.....
+A *Bayes classifier* is the conditional probability that is used to produce the lowest possible error rate called the *Bayes error rule.* The conditional probability for *Bayes classifier* is P(Y = j | X = x0), where j = 1, 2 depending on which response variable it is referring to and x0 is the predictor value..... 
+
+(I think this answers the question, but I didn't want to delete your answer)
+A *Bayes classifier* assigns each observation to the most likely class, given its predictor values. The Bayes classifier will always choose the class for which the conditional probability is largest. 
 
 # Conceptual Problems
 
@@ -97,6 +100,33 @@ From the Parametric vs. Nonparametric Tests: Two-Sample Tests activity, copy to 
 Write a couple of paragraphs explaining the difference between parametric and nonparametric methods and describing under what conditions we might prefer to use a classic nonparametric method (Mann-Whitney) Instead of the corresponding parametric method (two-sample t-test).
 
 ######
+```{r}
+nG <- 50
+for (i in 1:length(pvalues)){
+  set.seed(i)  # notice that the seed changes every time inside the for loop
+  # you could also set a single seed outside the for loop
+  
+  # Create the vectors x and y
+  x <- c(rnorm(nG*.9, mean = 0, sd = sqrt(0.19)), rnorm(nG*.1, mean = 3, sd = sqrt(0.19)))
+  y <- c(rnorm(nG*.9, mean = 0.8, sd = sqrt(0.19)), rnorm(nG*.1, mean = 3.8, sd = sqrt(0.19)))
+
+  # Perform the t-test and get the p-value
+  ttest = t.test(x, y, alternative = "t")
+  pvalues[i] <- ttest$p.value
+    
+}
+```
+```{r}
+hist(pvalues)
+
+plot(ecdf(pvalues),
+     xlab = "p-value",
+     ylab = "F(p-value)",
+     main = "Empirical CDF of the P-Value Under H0")
+
+mean(pvalues <= 0.05)
+```
+
 
 # Applied Problems
 
@@ -121,8 +151,9 @@ A <- coll[ , 1:10]
 pairs(A)
 
 # c.iii
-plot(coll)
-
+coll$Outstate <- as.factor(coll$Outstate)
+coll$Private <- as.factor(coll$Private)
+plot(coll$Outstate, coll$Private, col = "red", varwidth = TRUE, horizontal = TRUE, xlab = "Outstate", ylab = "Private")
 # c.iv
 
 
