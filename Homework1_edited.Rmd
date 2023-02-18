@@ -60,7 +60,7 @@ As a model becomes more complex, the *bias* of the model will decrease and the *
 A *Bayes classifier* is the conditional probability that is used to produce the lowest possible error rate called the *Bayes error rule.* The conditional probability for *Bayes classifier* is P(Y = j | X = x0), where j = 1, 2 depending on which response variable it is referring to and x0 is the predictor value..... 
 
 (I think this answers the question, but I didn't want to delete your answer)
-A *Bayes classifier* assigns each observation to the most likely class, given its predictor values. The Bayes classifier will always choose the class for which the conditional probability is largest. 
+A Bayes classifier assigns each observation to the most likely class, given its predictor values. The Bayes classifier will always choose the class for which the conditional probability is largest. 
 
 # Conceptual Problems
 
@@ -101,6 +101,8 @@ Write a couple of paragraphs explaining the difference between parametric and no
 
 ######
 ```{r}
+pvalues <- numeric(length = 10000)
+
 nG <- 50
 for (i in 1:length(pvalues)){
   set.seed(i)  # notice that the seed changes every time inside the for loop
@@ -126,7 +128,9 @@ plot(ecdf(pvalues),
 
 mean(pvalues <= 0.05)
 ```
-
+Parametric methods are utilized when a variable is assumed to be normally distributed and there are no outliers.  Parametric methods are used with data that sufficiently fits a distribution. They can also estimate the value of a point when there are no data.
+  Nonparametric methods seek an estimate of f to get as close to the actual point as possible. This implies that these methods can be used on a wider range of shapes of f. These methods are used when outliers in the data cannot be removed or when a distribution cannot be applied to the dataset. 
+  Based on the Parametric vs. Nonparametric activity we did in class, increasing power led to a lower probability of making a type 2 error.
 
 # Applied Problems
 
@@ -179,8 +183,10 @@ The file \emph{violence.csv} contains the time (in seconds) that each child stay
 
 ```{r}
 data = read.csv("violence.csv", h = T)
+View(data)
+hist(data$Time)
 ```
-
+In order to do a two sample t-test, the data must be normally distributed, but this dataset has an outlier and skewed right, as seen by the boxplot.
 
 ## Applied Problem 3 (Code: 1 pt; Explanation: 2 pts)
 
