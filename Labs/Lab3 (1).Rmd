@@ -105,9 +105,9 @@ Power = 2/50 = 0.04
 
 What does the `p.adjust` function do exactly when `method = bonferroni`? What about when `method = holm`? Why does it make more sense for R to adjust the p-values rather than the significance level when controlling the FWER?
 
-When `method = bonferroni`
-When `method = holm` 
-It makes more sense for R to adjust the p-values rather than the significance level when controlling the FWER because 
+When `method = bonferroni`, the p-values are multiplied by the number of hypotheses, m, in order to obtain the adjusted p-values, but the adjusted p-values aren't allowed to exceed 1. 
+When `method = holm`, the p-values are ordered from least to greatest. Then each p-value is multiplied by m+1-k, where k is the rank of the p-value. 
+It makes more sense for R to adjust the p-values rather than the significance level when controlling the FWER because we can simply compare the p-values to the desired FWER $alpha$ in order to determine whether to reject each hypothesis.
 
 ## Part c (Explanation: 1 pt)
 
@@ -247,24 +247,3 @@ Obtain the adjusted p-values using the Benjamini-Hochberg procedure. How many nu
 
 Compare your results from the three procedures. Why is it important to consider the situation where *some* null hypotheses are true, when evaluating the performance of the different procedures?
 
-# Problem 4: Bootstrap Estimation of Standard Error
-
-## Part a (Code: 0.5 pts)
-
-Run the code in the first half of ISLR Lab 5.3.4, "Estimating the Accuracy of a Statistic of Interest." Put each chunk from the textbook in its own chunk.
-
-If you are in the actuarial science concentration, you should be familiar with (or will at some point see) this formula! For the rest of us, note that $X$ and $Y$ are assumed to be the yearly return of two different financial assets, and $\alpha$, the quantity to be estimated, is the fraction of money to be invested in $X$ such that the variance (risk) of the total investment $\alpha X + (1 - \alpha) Y$ is minimized. In this problem $\alpha$ is not the significance level!
-
-## Part b (Code: 2 pts)
-
-According to the instructions for Lab 5.3.4, "We can implement a bootstrap analysis by performing this command [alpha.fn on a bootstrap sample] many times, recording all of the corresponding estimates for $\alpha$, and computing the resulting standard deviation."
-
-Write a code chunk that performs all of those steps and prints out the standard deviation. Use 1000 bootstrap samples. 
-
-## Part c (Code: 1 pt)
-
-Replicate the center panel of textbook Figure 5.10: a histogram of  the bootstrap estimates of $\alpha$ (from Part b) with a solid pink (or red) line at the true value of $\alpha = 0.6$. You may use either base R plotting commands (which uses `abline` to add the vertical line) or the `ggplot2` package (which adds a `geom_vline` to the plot). 
-
-## Part d (Explanation: 1 pt)
-
-Note that the distribution you graphed in Part c is a sampling distribution of $\hat{\alpha}$. Explain why it would be appropriate to use this sampling distribution to construct a confidence interval for $\alpha$, but not to obtain a p-value for a hypothesis test of $H_0: \alpha = 0.6$ against $H_a: \alpha \neq 0.6$.
