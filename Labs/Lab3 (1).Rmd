@@ -321,3 +321,4 @@ sum(p.adjust(p_values2, method="BH") <= 0.05)
 
 Compare your results from the three procedures. Why is it important to consider the situation where *some* null hypotheses are true, when evaluating the performance of the different procedures?
 
+If we only considered situations where the null hypotheses were false, then we might only use procedures that work well when they are false but not when they are true.
