@@ -117,6 +117,17 @@ Consider the second-to-last chunk in ISLR Lab 13.6.2 (the one using `TukeyHSD`).
 
 Hint: What are the assumptions for the ANOVA Test? Are they clearly violated?
 
+I believe it would be appropriate to do an ANOVA test with this data. According to the book, the Tukey method takes as input the output of an ANOVA regression model, which means that the ANOVA method is already in use. There are no ANOVA assumptions being violated, as all the variables are independent from each other and there are no outliers.
+```{r}
+fund.mini <- Fund[, 1:5]
+
+returns <- as.vector ( as.matrix (fund.mini))
+manager <- rep (c("1", "2", "3", "4", "5") , rep (50, 5))
+a1 <- aov (returns ~ manager)
+TukeyHSD (x = a1)
+anova(a1)
+```
+
 
 # Problem 2: False Discovery Rate
 
@@ -321,4 +332,4 @@ sum(p.adjust(p_values2, method="BH") <= 0.05)
 
 Compare your results from the three procedures. Why is it important to consider the situation where *some* null hypotheses are true, when evaluating the performance of the different procedures?
 
-If we only considered situations where the null hypotheses were false, then we might only use procedures that work well when they are false but not when they are true.
+If we only considered situations where the null hypotheses were false, then we might only use procedures that work well when they are false but not when they are true. 
