@@ -61,20 +61,26 @@ Write a code chunk that performs all of those steps and prints out the standard 
 ```{r}
 # 1. get a bootstrap sample
 ## Use sample()
-bs.x <- sample(Portfolio$X, replace = T)
+#bootSample <- sample[,], replace = T)
 # 2. Call alpha.fn on bootstrap sample and store the output (alpha)
 ## use alpha.fn()
-#alpha.fn(bs, )
+#alpha.fn(Portfolio, )
 # 3. Repeat Steps 1 and 2 many times (to get many estimates of alpha)
 ## use for loop
 # 4. Get SD of the alpha-estimates
 ## Use sd()
+set.seed(7)
+BS <- matrix(nrow=1,ncol=1000)
+for (i in 1:1000) {
+  BS[i] = alpha.fn(Portfolio, sample(100, 100, replace = T))
+}
+sd(BS)
 ```
 
 
 ## Part c (Code: 1 pt)
 
-Replicate the center panel of textbook Figure 5.10: a histogram of  the bootstrap estimates of $\alpha$ (from Part b) with a solid pink (or red) line at the true value of $\alpha = 0.6$. You may use either base R plotting commands (which uses `abline` to add the vertical line) or the `ggplot2` package (which adds a `geom_vline` to the plot). 
+Replicate the center panel of textbook Figure 5.10: a histogram of the bootstrap estimates of $\alpha$ (from Part b) with a solid pink (or red) line at the true value of $\alpha = 0.6$. You may use either base R plotting commands (which uses `abline` to add the vertical line) or the `ggplot2` package (which adds a `geom_vline` to the plot). 
 
 ## Part d (Explanation: 1 pt)
 
@@ -120,11 +126,11 @@ ggplot(data=Boston, aes(x=medv)) + geom_histogram(center=35, binwidth=2)
 
 
 What looks a bit off about this histogram? Try filling in the `filter` function in the chunk below to confirm your suspicions.
-
+The histogram roughly follows a normal distribution but towards the very right side, there are about 20 observations with medv=$50K when there shouldn't be that many observations.  
 ```{r filter Boston medv, eval = FALSE}
 Boston %>% 
-  filter(medv > 35) %>%
-  count(medv > 35) # getting sample size without having to summarize
+  filter(medv > 48) %>%
+  count() # getting sample size without having to summarize
 ```
 
 ## Part d (Code: 1 pt; Explanation: 1 pt)
@@ -134,9 +140,20 @@ The full documentation for this dataset is somewhat confusing and raises more qu
 Other variables are sensibly defined, but are counterintuitive to what we would expect. Pick either the variable `age` or `rm`, and answer the following questions:
 
 * What do you expect this variable would represent, if the observational units were houses?
+I expect `age` to represent the average age of the house. 
 * What does this variable actually represent?
+`age` actually represents the proportion of owner-occupied units built prior to 1940. 
 * What is the distribution of this variable in the dataset? Include at least one graph to support your answer.
+The distribution of `age` is left-skewed. There are many houses old houses and not as many new houses. 
+```{r}
+ggplot(data=Boston, aes(x=age)) + geom_histogram(binwidth=8)
+```
+
 * Does this variable appear to have a relationship with the response variable `medv`? Include at least one graph to support your answer.
+```{r}
+ggplot(data=Boston, aes(x=age, y=medv)) + geom_point()
+```
+
 
 # Problem 3: Simple Linear Regression
 
@@ -145,10 +162,85 @@ Other variables are sensibly defined, but are counterintuitive to what we would 
 Run the code in ISLR Lab 3.6.2. Put each chunk from the textbook in its own chunk.
 
 Briefly explain what the `confint()` and `predict()` functions output when applied to a linear model.
+```{r}
+head(Boston)
+```
+
+```{r eval=FALSE}
+?Boston
+```
+
+```{r eval=FALSE}
+lm.fit <- lm(medv~lstat)
+```
+
+```{r}
+lm.fit <- lm(medv ~ lstat, data = Boston)
+attach(Boston)
+lm.fit <- lm(medv ~ lstat)
+```
+
+```{r}
+lm.fit
+summary(lm.fit)
+```
+
+```{r}
+names(lm.fit)
+#we can extract quantities by name (e.g. lm.fit$coefficients) but it is safer to use extractor function like coef() to access them
+coef(lm.fit)
+```
+
+```{r}
+#Confidence intervals for coefficient estimates
+confint(lm.fit)
+```
+
+```{r}
+#95% Confidence interval for the prediction of medv for a given value of lstat
+predict(lm.fit, data.frame(lstat = (c(5, 10, 15))), interval = "confidence")
+```
+
+```{r}
+#95% Prediction interval for the prediction of medv for a given value of lstat
+#prediction interval is wider than confidence interval
+predict(lm.fit, data.frame(lstat = (c(5, 10, 15))), interval = "prediction")
+```
+
+```{r}
+plot(lstat, medv)
+abline(lm.fit)
+```
+
+```{r additional setting for plotting lines and points}
+plot(lstat, medv)
+abline(lm.fit, lwd = 3) #can be used to draw any line, not just LS regression line
+abline(lm.fit, lwd = 3, col = "red")
+plot(lstat, medv, col = "red")
+plot(lstat, medv, pch = 20)
+plot(lstat, medv, pch = "+")
+plot(1:20, 1:20, pch = 1:20)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(lm.fit)
+```
+
+```{r}
+plot(predict(lm.fit), residuals(lm.fit))
+plot(predict(lm.fit), rstudent(lm.fit))
+```
+
+```{r}
+plot(hatvalues(lm.fit))
+which.max(hatvalues(lm.fit))
+```
 
 ## Part b (Explanation: 2.5 pts)
 
 Write out the equation of the least-squares line relating `lstat` and `medv`. Write two sentences interpreting the parameter estimates (one for slope, one for intercept) in the context of the data. Remember to use the right observational units!
+
 
 Given the issue raised in Problem 1d with the `lstat` interpretation, let's just say in our interpretations that `lstat` represents the percentage of people in the neighborhood considered lower class.
 
