@@ -325,7 +325,9 @@ Jumping straight into modeling without looking at the data is a very bad idea. C
 
 Do you see any evidence of nonlinearity? Any evidence of collinearity? Explain your reasoning.
 
-Medv is the response variable,so we are looking at the top middle and top right graph. The lstat vs age graph is to answer colinearity.
+Medv is the response variable, so we are looking at the top middle and top right graph. The lstat vs age graph is to answer colinearity.
+
+There is evidence of nonlinearity between `medv`, `lstat`, and `age` as none of the scatterplots seem to follow a clearly linear pattern. Since we see that `medv`, `lstat`, and `age` don't have a linear relationship, then there is also no evidence of collinearity.  
 ```{r}
 pairs(~ medv +  lstat + age, data = Boston)
 ```
