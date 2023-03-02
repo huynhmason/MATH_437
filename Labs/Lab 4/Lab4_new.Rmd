@@ -2,7 +2,9 @@
 title: 'Lab Assignment #4'
 author: "Math 437 - Modern Data Analysis"
 date: "Due February 27, 2023"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 # Instructions
@@ -107,6 +109,7 @@ Do an Internet search for "Boston housing dataset" and answer the following ques
 The data was collected by the U.S. Census Service concerning housing in the area of Boston, Massachusetts. This data is from the 1970 census, so about 53 years old. 
 
 * What does one row in this dataset represent?
+
 One row in this dataset represents housing in a Boston suburb or town. 
 
 ## Part b (Explanation: 1.5 pts)
@@ -133,7 +136,9 @@ ggplot(data=Boston, aes(x=medv)) + geom_histogram(center=35, binwidth=2)
 
 
 What looks a bit off about this histogram? Try filling in the `filter` function in the chunk below to confirm your suspicions.
-The histogram roughly follows a normal distribution but towards the very right side, there are about 20 observations with medv=$50K when there shouldn't be that many observations.  
+
+The graph is supposed to be skewed right or normal for the most part, but there is the bin at 50,000 with almost 20 observations that makes it look unusual. Using the filter function, we see that there are exactly 16 observations at 50,000.
+
 ```{r filter Boston medv, eval = FALSE}
 Boston %>% 
   filter(medv > 48) %>%
@@ -146,17 +151,27 @@ The full documentation for this dataset is somewhat confusing and raises more qu
 
 Other variables are sensibly defined, but are counterintuitive to what we would expect. Pick either the variable `age` or `rm`, and answer the following questions:
 
+I pick `age`
+
 * What do you expect this variable would represent, if the observational units were houses?
-I expect `age` to represent the average age of the house. 
+
+I expect `age` to represent how old the house is. 
+
 * What does this variable actually represent?
+
 `age` actually represents the proportion of owner-occupied units built prior to 1940. 
+
 * What is the distribution of this variable in the dataset? Include at least one graph to support your answer.
-The distribution of `age` is left-skewed. There are many houses old houses and not as many new houses. 
+
+The distribution of `age` is left-skewed. There are many old houses and not as many new houses. 
+
 ```{r}
 ggplot(data=Boston, aes(x=age)) + geom_histogram(binwidth=8)
 ```
 
 * Does this variable appear to have a relationship with the response variable `medv`? Include at least one graph to support your answer.
+
+Looking at the scatterplot, there are more clusters of points on the bottom right corner of the graph. Comparing medv and age, this implies that the oldest neighborhoods in Boston have less value in thousands, compared to houses built between 0 and 50 years from 1940. However, there are quite a bit of outliers of neighborhoods built at least 80 years ago that are more valuable than most of the newer houses. I believe this is because there are some neighborhoods that could possibly have nicer looking houses or have been renovated.
 ```{r}
 ggplot(data=Boston, aes(x=age, y=medv)) + geom_point() #+ geom_abline(aes(intercept=, slope=))
 ```
@@ -244,6 +259,7 @@ which.max(hatvalues(lm.fit))
 ```
 
 Briefly explain what the `confint()` and `predict()` functions output when applied to a linear model.
+
 The confint() command helps us obtain confidence intervals for the coefficient estimates. The predict() command produces confident intervals and prediction intervals for a prediction of medv given a value of lstat. 
 
 ## Part b (Explanation: 2.5 pts)
@@ -260,12 +276,15 @@ Refer to the diagnostic plots you created in Part (a) to answer the following qu
 
 * Why do the lab instructions claim that "there is some evidence of non-linearity"?
 
+Based on the residual vs fitted graph, linearity is shown when there is a horizontal line. However, the general relationship of the data is curved, so the red line is also more curved as well.
 
 * Do you believe that the residuals are normally distributed? Why or why not?
 
+The line of best fit on the q-q plot is at an angle less than 45 degrees, which convinces me to believe that the residuals are not normally distributed.
 
 * Do you believe that the response variable is homoskedastic (the residuals have roughly constant variance across the entire predictor range)? Why or why not?
 
+I believe the response variable is not homoskedastic because the variance is not constant on the scale-location graph. The majority of the data points are on the right side of the graph, despite the line of best fit. Thus the variance is not constant and there is no homoskedasticity.
 
 
 # Problem 4: Multiple Linear Regression
@@ -296,11 +315,18 @@ lm.fit1 <- update (lm.fit , ~ . - age)
 
 Briefly explain what the `vif()` and `update()` functions do when applied to a linear model.
 
-The vif() function computes the variance inflation factors. The update() function updates and re-fits a linear model. 
+The variance inflation function is used to check how cautious we need to be to make sure the assumptions are not violated. The higher a vif value, the greater colinearity or multicolinearity there is present.
+
+The update function is used to update an already existing variable by editing it. In our case, the update function was used to output a regression for all the predictor variables in our Boston dataset except for age because it had a high p-value. 
 
 ## Part b (Code: 0.5 pts; Explanation: 1 pt)
 
 Jumping straight into modeling without looking at the data is a very bad idea. Create a scatterplot matrix showing only the three variables in the first `lm.fit` object (`medv`, `lstat`, `age`).
 
 Do you see any evidence of nonlinearity? Any evidence of collinearity? Explain your reasoning.
-Medv is the... 
+
+Medv is the response variable,so we are looking at the top middle and top right graph. The lstat vs age graph is to answer colinearity.
+```{r}
+pairs(~ medv +  lstat + age, data = Boston)
+```
+
