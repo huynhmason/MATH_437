@@ -118,16 +118,14 @@ Textbook Exercise 5.4.2 parts (e), (g), and (h). For part (g), you should create
 (e) When n = 100, what is the probability that the jth observation is in the bootstrap sample?
 The probability when n = 100 is (1 - (1/100)^100 = 0.634
 
-(g) Create a plot that displays, for each integer value of n from 1 to 100, 000, the probability that 
-the jth observation is in the bootstrap sample. Comment on what you observe.
+(g) Create a plot that displays, for each integer value of n from 1 to 100000, the probability that the jth observation is in the bootstrap sample. Comment on what you observe.
 ```{r}
 
 ```
 ##########
 
 (h) We will now investigate numerically the probability that a bootstrap sample of size n = 100 
-contains the jth observation. Here j = 4. We repeatedly create bootstrap samples, and each time
-we record whether or not the fourth observation is contained in the bootstrap sample.
+contains the jth observation. Here j = 4. We repeatedly create bootstrap samples, and each time we record whether or not the fourth observation is contained in the bootstrap sample.
 ###########
 
 ## Simulation Problem 2 (Code: 1.5 pts; Explanation: 3.5 pts)
@@ -173,20 +171,20 @@ There is a significant difference in highway gas mileage between pickups and non
 Textbook Exercise 5.4.9.
 
 We will now consider the Boston housing data set, from the ISLR2 library.
-(a) Based on this data set, provide an estimate for the population mean of medv. Call this estimate ˆµ.
+(a) Based on this data set, provide an estimate for the population mean of medv. Call this estimate $\hat\mu$.
 ```{r}
 attach(Boston)
 mu = mean(Boston$medv)
 print(mu)
 ```
 
-(b) Provide an estimate of the standard error of ˆµ. Interpret this result.
+(b) Provide an estimate of the standard error of $\hat\mu$. Interpret this result.
 Hint: We can compute the standard error of the sample mean by dividing the sample standard deviation by the square root of the number of observations.
 ```{r}
 sd(Boston$medv)/sqrt(nrow(Boston))
 ```
 
-(c) Now estimate the standard error of ˆµ using the bootstrap. How does this compare to your answer from (b)?  ######################
+(c) Now estimate the standard error of $\hat\mu$ using the bootstrap. How does this compare to your answer from (b)?  ######################
 ```{r}
 boot.fn = function(data, index) {
   return(mean(data[index]))
@@ -198,7 +196,7 @@ print(BS)
 The answer in part (b) is 0.40886 which is slightly less than the standard error from part (c) of 0.41318.
 
 (d) Based on your bootstrap estimate from (c), provide a 95 % confidence interval for the mean of medv. Compare it to the results obtained using t.test(Boston$medv).
-Hint: You can approximate a 95 % confidence interval using the formula [ˆµ − 2SE(ˆµ), µˆ + 2SE(ˆµ)].
+Hint: You can approximate a 95 % confidence interval using the formula $[\hat\mu − 2SE(\hat\mu), \hat\mu + 2SE(\hat\mu)].$
 ```{r}
 conf.int = c(BS$t0 - (2 * 0.3994119), BS$t0 + (2  * 0.3994119))
 
@@ -206,7 +204,7 @@ t.test(Boston$medv)
 ```
 
 
-(e) Based on this data set, provide an estimate, ˆµmed, for the median
+(e) Based on this data set, provide an estimate, $\hat\mu_{med}$, for the median
 value of medv in the population.
 ```{r}
 mu_med = median(Boston$medv)
@@ -214,7 +212,7 @@ print(mu_med)
 ```
 
 
-(f) We now would like to estimate the standard error of ˆµmed. Unfortunately, there is no simple formula for computing the standard error of the median. Instead, estimate the standard error of the median using the bootstrap. Comment on your findings.
+(f) We now would like to estimate the standard error of $\mu_{med}$. Unfortunately, there is no simple formula for computing the standard error of the median. Instead, estimate the standard error of the median using the bootstrap. Comment on your findings.
 ```{r}
 boot.median.fn = function(data, index) {
   return(median(data[index]))
@@ -224,14 +222,14 @@ BS.median = boot(Boston$medv, boot.median.fn, 10000)
 print(BS.median)
 ```
 
-(g) Based on this data set, provide an estimate for the tenth percentile of medv in Boston census tracts. Call this quantity ˆµ0.1. (You can use the quantile() function.)
+(g) Based on this data set, provide an estimate for the tenth percentile of medv in Boston census tracts. Call this quantity $\mu_{0.1}$. (You can use the quantile() function.)
 ```{r}
 mu0.1 = quantile(Boston$medv, probs=c(.1))
 print(mu0.1)
 ```
 
 
-(h) Use the bootstrap to estimate the standard error of ˆµ0.1. Comment on your findings.
+(h) Use the bootstrap to estimate the standard error of $\mu_{0.1}$. Comment on your findings.
 ```{r}
 boot.quant.ten.fn = function(data, index) {
   return(quantile(data[index], probs=c(.1)))

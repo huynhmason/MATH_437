@@ -88,9 +88,15 @@ Holding difficulty constant, which of the following instructors would be predict
 
 Run the single line of code in ISLR Lab 3.6.4. 
 
+```{r}
+summary(lm(medv ~ lstat * age, data = Boston))
+```
+
 ## Part b (Explanation: 2 pts)
 
 Notice that `age` is a significant predictor of `medv` in the model without the interaction term (from ISLR Lab 3.6.3 on Lab 4), but it is no longer a significant predictor of `medv` once we add in the interaction term. The p-value is huge (0.971!). What do you think is happening here? Are we okay to remove the `age` variable from the model with the interaction term? Why or why not?
+
+
 
 ## Part c (Code: 1 pt; Explanation: 1.5 pts)
 
