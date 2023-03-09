@@ -18,7 +18,7 @@ In this lab, we will be working with four datasets. Three (`Boston`, `Carseats`,
 The fourth dataset, `RateMyProfessor`, needs to be downloaded from Canvas. This dataset contains the overall average rating from <https://www.ratemyprofessors.com/> for over 22,000 professors, as collected by [Murray et al. (2020)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0233515). A data dictionary for the dataset can be found at <https://github.com/murrayds/aa_rmp/tree/master/data> (note that I removed a bunch of variables so that you're downloading a 2 MB dataset instead of a much larger one).
 
 
-```{r libraries and data, message = FALSE, warning = FALSE, eval = FALSE}
+```{r libraries and data, message = FALSE, warning = FALSE}
 library(ISLR2)
 library(ggplot2)
 library(dplyr)
@@ -75,12 +75,47 @@ summary(lm.rmp)
 
 Holding difficulty constant, which of the following instructors would be predicted to have the highest overall rating? Which would be predicted to have the lowest overall rating? Explain your reasoning.
 
+```{r}
+# general formula: 5.301027 + (-0.587803)(difficulty = 2) + (0.636429)(hotness = hot) + (-0.050371)(rank = Associate Professor) + (-0.047455)(rank = Professor)
+```
+
 * Attractive Assistant Professor
+
+```{r}
+5.301027 + (-0.587803)*(2) + (0.636429)*(1) + (-0.050371)*(0) + (-0.047455)*(0)
+```
+
 * Attractive Associate Professor
+
+```{r}
+5.301027 + (-0.587803)*(2) + (0.636429)*(1) + (-0.050371)*(1) + (-0.047455)*(0)
+```
+
 * Attractive Professor
+
+```{r}
+5.301027 + (-0.587803)*(2) + (0.636429)*(1) + (-0.050371)*(0) + (-0.047455)*(1)
+```
+
 * Less-attractive Assistant Professor
+
+```{r}
+5.301027 + (-0.587803)*(2) + (0.636429)*(0) + (-0.050371)*(0) + (-0.047455)*(0)
+```
+
 * Less-attractive Associate Professor
+
+```{r}
+5.301027 + (-0.587803)*(2) + (0.636429)*(0) + (-0.050371)*(1) + (-0.047455)*(0)
+```
+
 * Less-attractive Professor
+
+```{r}
+5.301027 + (-0.587803)*(2) + (0.636429)*(0) + (-0.050371)*(0) + (-0.047455)*(1)
+```
+
+The instructor predicted to have the highest overall rating is an attractive assistant professor, and the instructor predicted to have the lowest overall rating is a less-attractive professor. Professors who are better looking and or have better personalities are more attractive in students' eyes, which is why they have higher ratings than professors with less attraction. I believe assistant professors have higher ratings than professors because full-time professors have other things they need to do, such as conducting research, writing papers, or advising, while assistant professors spend more time with the students.
 
 # Problem 2: Interaction Terms
 
@@ -96,23 +131,28 @@ summary(lm(medv ~ lstat * age, data = Boston))
 
 Notice that `age` is a significant predictor of `medv` in the model without the interaction term (from ISLR Lab 3.6.3 on Lab 4), but it is no longer a significant predictor of `medv` once we add in the interaction term. The p-value is huge (0.971!). What do you think is happening here? Are we okay to remove the `age` variable from the model with the interaction term? Why or why not?
 
-
+The p-value increased drastically because in the new model, `age` is mostly affected by the interaction effect and not the main effect. In this lab, we also have the factor of lstat:age which resulted in such a big p-value. In the previous lab, we had lstat and age separately, with just the slopes in the least-squares regression line. We are not okay to remove the `age` variable from the model with the interaction term because there may be some correlation between the interaction and main effects. We shouldn't make a decision to remove a variable based on statistical significance. 
 
 ## Part c (Code: 1 pt; Explanation: 1.5 pts)
 
 Create a new dataset, `associates`, by `filter`ing the `RateMyProfessor` dataset to include only the Associate Professors.
 
+```{r}
+associates <- filter(RateMyProfessor, rank == "Associate Professor")
+associates
+```
+
 Next, complete this code chunk to create a graph of overall rating vs. difficulty rating for the associate professors, with "hot" professors shown in red and "cold" professors shown in blue. Remember to delete `eval = FALSE` once you get the code to run!
 
-```{r ggplot associates, eval = FALSE}
-ggplot() + # add appropriate arguments here or in the next line
+```{r ggplot associates}
+ggplot(RateMyProfessor, aes(x=difficulty, y=overall, color=hotness)) + # add appropriate arguments here or in the next line
   geom_point(alpha = 0.25) +
   # if you added arguments to geom_point, add the same arguments to geom_smooth
   # otherwise don't touch these lines - they will run fine
   geom_smooth(method = "lm", se = FALSE) + # regression line, no confidence bands
   scale_color_manual(name = "Chili Pepper Rating",  # make legend nice
                      labels = c(hot = "Attractive", cold = "Less-attractive"),
-                     values = c(hot = "red", cold = "blue")) +
+                     values = c(hot = "red", cold = "blue")) 
 ```
 
 How does the difficulty of the professor modify the relationship between attractiveness and overall rating?
@@ -121,9 +161,34 @@ How does the difficulty of the professor modify the relationship between attract
 
 Using the `RateMyProfessor` dataset, fit a linear model predicting overall rating from the difficulty rating (`difficulty`), chili pepper rating (`hotness`), rank (`rank`), and an interaction term between `difficulty` and `hotness`.
 
+```{r}
+lm(overall ~ difficulty + hotness + rank + difficulty:hotness, data = RateMyProfessor)
+```
+
 Using your results, write out the least-squares regression equation predicting overall rating from difficulty for an attractive associate professor. Also, write out the least-squares regression equation predicting overall rating from difficulty for a less-attractive associate professor. Explain how you obtained each equation.
 
+In general, the least-squares regression equation is:
+overall = 5.47087 + (-0.64087)(difficulty) + (-0.25238)(hotness=hot) + (-0.04894)(rank=Associate Professor) + (-0.04428)(rank=Professor) + (0.29706)(difficulty)(hotness=hot)
+
+*attractive associate professor
+
+overall = 5.47087 + (-0.64087)(difficulty) + (-0.25238)(1) + (-0.04894)(1) + (-0.04428)(0) + (0.29706)(difficulty)(1)
+
+overall = 5.16955 + (-0.34381)(difficulty) 
+
+For an attractive associate professor, hotness=hot=1, rank=Associate Professor=1, rank=Professor=0. Then we add like terms to get the equation.
+
+* less-attractive associate professor
+
+overall = 5.47087 + (-0.64087)(difficulty) + (-0.25238)(0) +  (-0.04894)(1) + (-0.04428)(0) + 0.29706(difficulty)(0)
+
+overall = 5.42193 + (-0.64087)(difficulty)
+
+For a less-attractive associate professor, hotness=hot=0, rank=Associate Professor=1, rank=Professor=0. Then we add like terms to get the equation. 
+
 Do your equations support your conclusions from part (c)? Explain why or why not.
+
+Based on the equations from part (c), we see that an attractive associate professor's overall rating decreases at a lower rate than a less-attractive associate professor's overall rating as difficulty increases.
 
 # Problem 3: Regression with Nonlinear Transformations of the Predictors
 
@@ -131,13 +196,47 @@ Do your equations support your conclusions from part (c)? Explain why or why not
 
 Run the first four code chunks in ISLR Lab 7.8.1 (up through the point where `fit2b` is created). Put each chunk from the textbook in its own chunk.
 
+```{r}
+attach(Wage)
+```
+
+```{r}
+fit <- lm(wage ~ poly(age, 4), data = Wage)
+coef(summary(fit))
+```
+
+```{r}
+fit2 <- lm(wage ~ poly (age , 4, raw = T), data = Wage)
+coef(summary (fit2))
+```
+
+```{r}
+fit2a <- lm(wage ~ age + I(age^2) + I(age^3) + I(age^4), data = Wage)
+coef(fit2a)
+```
+
+```{r}
+fit2b <- lm(wage ~ cbind (age , age^2, age^3, age^4), data = Wage)
+```
+
 ## Part b (Code: 1 pt)
 
 In the code chunk below, create a data frame with a single variable, `age`, ranging from 18 to 80, then use the `augment` function (in the `broom` package) to obtain the predicted wage, standard error of the mean wage, and the lower and upper bounds of a 95% confidence interval for the population mean wage at each age. (You can use any of `fit`, `fit2`, `fit2a`, or `fit2b` - they should all give the same predictions.)
 
 What is the 95% confidence interval for the population mean wage of 25-year-olds? 50-year-olds?
 
-```{r use augment to get predictions out}
+We estimate with 95% confidence that the population mean wage for 25-year-olds is in the interval from 85.21437 to 91.73322. 
+We estimate with 95% confidence that the population mean wage for 50-year-olds is in the interval from 117.3538 to 121.7865.
 
+```{r use augment to get predictions out}
+data.frame(age)
+au <- augment(fit, Wage, interval = "confidence")
+au
 ```
 
+```{r}
+au[age == 25,]
+# we estimate with 95% confidence that the population mean wage for 25-year-olds is in the interval from 85.21437 to 91.73322
+au[age == 50,]
+# we estimate with 95% confidence that the population mean wage for 50-year-olds is in the interval from 117.3538 to 121.7865
+```

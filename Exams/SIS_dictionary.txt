@@ -1,0 +1,39 @@
+Data from Bissig and DeCarli (2019). Global & Community Health: Brief in-hospital screening anticipates complex admissions and may detect dementia. https://doi.org/10.1212/WNL.0000000000007176 
+
+Subject_ID: the unique identifier for each subject
+
+Age: subject's age in years
+
+Sex: subject's reported sex (F = female, M = male)
+
+Admission: whether the subject was admitted to the hospital (Y) or not (N) after the neurology consult
+
+Duration_of_Admission: the number of days the subject spent in the hospital
+
+Quantity_Lab_Orders: the number of lab tests ordered on the subject - note that this includes both tests ordered before admission to the hospital and after (if admitted)
+
+Quantity_Imaging_Orders: the number of imaging tests ordered on the subject - note that this includes both tests ordered before admission to the hospital and after (if admitted)
+
+Initial_Body_Temperature: the subject's body temperature, in degrees Celsius, when first evaluated in the emergency department
+
+Initial_Heart_Rate: the subject's heart rate, in beats per minute, when first evaluated in the emergency department
+
+Initial_Respiratory_Rate: the subject's breathing rate, in breaths per minute, when first evaluated in the emergency department
+
+Initial_Systolic_Blood_Pressure: the subject's systolic blood pressure, in mmHg, when first evaluated in the emergency department
+
+Initial_Diastolic_Blood_Pressure: the subject's systolic blood pressure, in mmHg, when first evaluated in the emergency department
+
+Initial_White_Blood_Cell_Count: the subject's number of white blood cells (in thousands per microliter of blood) as estimated by a blood (lab) test ordered by the emergency department
+
+Orientation_Score: how many of the current month, year, and day of week the subject could correctly identify during the neurology consult
+
+Free_Recall_Score: how many of three words ("banana", "sunrise" and "chair") the subject could recall after a 1-minute distractor task during the neurology consult
+
+Clock_Draw: whether the subject could draw an analog clock with all numbers in the approximately correct position and the hands pointing to 11:10 (Y) or not (N)
+
+Number_of_Home_Medications: the number of medications the subject reported being on during the neurology consult
+
+History_of_Cognitive_Impairment: whether the subject had ever previously been diagnosed with a cognitive impairment (Y) or not (N)
+
+Ischemic: whether the subject's primary diagnosis (after admission to the hospital) or complaint (if not admitted) involved loss of blood to part of the brain (Y = stroke or "mini-stroke"; N = any other diagnosis/complaint)

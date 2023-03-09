@@ -35,7 +35,7 @@ It is necessary to adjust the significance level when testing a large number of 
 `FWER` is the probability of making at least one Type I Error while `FDR` is a ratio of false positives to total positives to ensure that we are rejecting as many null hypotheses as possible while guaranteeing that the a certain percentage of those rejected null hypotheses are false positives. It is impossible to control the `FDR` but we can control the `FWER`. #################
 
 6. Compare and contrast the *Bonferroni Method* and *Holm's Step-Down Method* for controlling the FWER.
-The `Bonferroni method` refers to adjusting the alpha in FWER to control the probability of performing a Type I Error. `Holm's method` also controls the FWER, but it is adjusted to result in fewer Type II Errors. Holm's method is less conservative to Bonferroni's method, and uniformly more powerful. In Holm's method, the threshold depends on the values of all m p-values, while Bonferri's method depends on the p-value lower than the ratio of alpha over m p-values.
+The `Bonferroni method` refers to adjusting the alpha in FWER to control the probability of performing a Type I Error. `Holm's method` also controls the FWER, but it is adjusted to result in fewer Type II Errors. Holm's method is less conservative to Bonferroni's method, and uniformly more powerful. In Holm's method, the threshold depends on the values of all m p-values, while Bonferroni's method depends on the p-value lower than the ratio of alpha over m p-values.
 
 7. Why do we prefer to use *Tukey's Method* or *Scheffe's Method* to control the FWER? In what conditions is it appropriate to use those methods instead of the Bonferroni or Holm methods?
 There are certain very specific settings that we prefer to use $Tukey's Method$ or $Scheffe's Method$.
@@ -44,8 +44,8 @@ $Tukey's Method$ allows us to control the FWER at some level alpha while rejecti
 8. Briefly describe the *Benjamini-Hochberg* procedure for controlling the FDR.
 The `Benjamini-Hochberg` procedures ensures that, on average, no more than a fraction q of the rejected null hypotheses are false positives. First, we determine what level we want to control the FDR, known otherwise as q. Then we compute the p-values #####
 
-9. What is/are the major assumption(s) of a *permutation test*? What is the general procedure for obtaining the null distribution of a test statistic using a permutation test?
-########
+9. What is/are the major assumption(s) of a *permutation test*? What is the general procedure for obtaining the null distribution of a test statistic using a permutation test? 
+In a permutation test, we assume that the data were generated under some kind of random assignment. Then under H0: no effect, any effect we observed in the sample must be explained by the random assignment. 
 
 10. When is it useful/recommended to use a permutation testing approach as opposed to a traditional theory-based approach?
 #########
