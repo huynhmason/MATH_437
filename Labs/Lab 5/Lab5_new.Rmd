@@ -63,7 +63,7 @@ Using the RateMyProfessor dataset, fit a linear model predicting the overall rat
 The reference level for `difficulty` is 1.000000.
 The reference level for `hotness` is cold.
 The reference level for `rank` is "Assistant Professor." 
-By default, R sets the reference level to the first category in alpha-numeric order. For categories that use letters/words, the reference level is set to whatever category comes first in alphabetical order. For categories that use numbers, the reference leve is set to whatever number comes first in numerical order. 
+By default, R sets the reference level to the first category in alpha-numeric order. For categories that use letters/words, the reference level is set to whatever category comes first in alphabetical order. For categories that use numbers, the reference level is set to whatever number comes first in numerical order. 
 
 ```{r}
 lm.rmp <- lm(overall ~ difficulty + hotness + rank, data = RateMyProfessor)
