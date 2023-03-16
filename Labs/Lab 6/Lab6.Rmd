@@ -224,6 +224,14 @@ In this problem, we will do all of our modeling without using the `tidymodels` p
 
 We will start out by working with only the species `virginica` and `versicolor`. Create a new dataset, `iris_vv`, by filtering to only include those two species. Then, pick two of the explanatory variables and, using the `ggplot2` package, create a scatterplot showing the relationship between those two variables, color-coded based on the `Species`.
 
+```{r}
+#View(iris)
+iris_vv <- iris %>% filter(Species == "virginica" | Species == "versicolor")
+#View(iris_vv)
+ggplot(data = iris_vv, aes(x=Petal.Length, y=Petal.Width, color=Species)) + geom_point()
+
+```
+
 ## Part b (Code: 2 pts)
 
 Prepare your dataset for the k-nearest neighbors algorithm by doing the following:
@@ -297,13 +305,15 @@ flights_knn <- workflow() %>%
 In the chunk below, write code that will `fit` the model on the training set. (If your model runs for ~3 seconds without an error message, start on part (b) while you wait for the chunk to churn.)
 
 ```{r fitting k-nn}
-
+flights_fit <- fit(flights_knn, data = flights2)
+flights_fit
 ```
 
 Next, use the `augment` function to create the tibble `flights_knn_predictions` containing the predictions for each flight in the `flights_test` dataset. 
 
 ```{r predicting with broom::augment}
-
+flights_knn_predictions <- broom::augment(flights_fit, new_data = flights_test, type = "prob")
+flights_knn_predictions
 ```
 
 ## Part b (Explanation: 1 pt)
@@ -312,7 +322,11 @@ While you wait for your code to run, as best you can, answer the following quest
 
 * How did we ensure that roughly 20% of the data was in the holdout set, even though we didn't know the exact size of my dataset?
 
+In part (a), we used the intial_split() function to take 80% of the data and stored it as the training set while the other 20% is stored as the training set. 
+
 * What does the `step_dummy` function do, and why did we need to do it?
+
+The step_dummy() function creates dummy variables so that we can represent categorical variables as binary numerical variables that take 0 or 1 as the value. We need it so we can use the dummy variables as predictors in our regression model. 
 
 ## Part c (Code: 0.5 pts; Explanation: 0.5 pts)
 
@@ -338,10 +352,13 @@ flights_multinom <- workflow() %>%
 In the chunk below, write code that will `fit` the model on the training set and store the result in the object `flights_multinom_fit`.
 
 ```{r fit the model}
-
+flights_multinom_fit <- fit(flights_multinom, data = flights_train)
+flights_multinom_fit
 ```
 
 What reference (baseline) level was chosen?
+
+carrier_AA (American Airlines) was chosen as the reference level. 
 
 ## Part d (Code: 0.5 pts)
 
@@ -366,10 +383,11 @@ Inference with a multinomial logistic regression model is possible by calling th
 
 If we use the `multinom` function directly, then we can use the `predict` function just like in linear and logistic regression, but we have to use either `class` or `probs` as our `type` argument - we can't use `response` and then pick an arbitrary boundary threshold, since now we have multiple boundaries between different groups.
 
-The `augment` function does away with this ridiculousness and gives us both class predictions and the predicted probability of being in each class without having the remember what argument to use for `type`. Using the `augment` function, create the tibble `flights_multinom_predictions` containing the predictions for each flight in the `flights_test` dataset. 
+The `augment` function does away with this ridiculousness and gives us both class predictions and the predicted probability of being in each class without having to remember what argument to use for `type`. Using the `augment` function, create the tibble `flights_multinom_predictions` containing the predictions for each flight in the `flights_test` dataset. 
 
 ```{r multinom prediction}
-
+flights_multinom_predictions <- broom::augment(flights_multinom_fit, new_data = flights_test, type = "prob")
+flights_multinom_predictions
 ```
 
 
@@ -390,6 +408,17 @@ When we have multi-class classification problems, it is possible that no class r
 
 Using the `accuracy` function in the `yardstick` package, find the prediction accuracy of each model.
 
+```{r}
+library(yardstick)
+accuracy(flights_multinom_predictions, truth = origin, estimate = .pred_class)
+accuracy(flights_knn_predictions, truth = origin, estimate = .pred_class)
+```
+
 ## Part f (Explanation: 1 pt)
 
 Briefly discuss the advantages of using the 3-nearest neighbors algorithm over the multinomial logistic regression model on the `flights` data, and the advantages of using the multinomial logistic regression model over the 3-nearest neighbors algorithm. Prediction accuracy is important, but not the only thing you should compare.
+
+Since 3-nearest neighbors is non-parametric, no assumptions are made about the shape of the decision boundary. When the decision boundary is non-linear, 3-nearest neighbors will make more accurate predictions than multinomial logistic regression. 
+
+The multinomial logistic regression model runs much faster than 3-nearest neighbors since 3-nearest neighbors has to compute the distances between each pair of points which is time-consuming on the large dataset `flights`. It also provides coefficients for the predictor variables, allowing us to interpret the association of a predictor variable with an increase in the log odds of being in one class compared to another class. 
+
